@@ -9,6 +9,13 @@ namespace eXercise.Controllers
         public ProductsController()
         {
 
+
+        }
+
+        [HttpGet]
+        public ActionResult GetProduct()
+        {
+            return Ok("Hello");
         }
     }
 }
