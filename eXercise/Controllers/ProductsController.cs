@@ -8,8 +8,6 @@ namespace eXercise.Controllers
     {
         public ProductsController()
         {
-
-
         }
 
         [HttpGet]
