@@ -19,8 +19,13 @@ namespace eXercise.Controllers
         }
 
         [HttpPost("trolleyTotal")]
-        public async Task<ActionResult<decimal>> TrolleyTotal([FromBody]TrolleyRequest trolleyRequest)
+        public async Task<ActionResult<decimal>> GetTrolleyTotalAsync([FromBody]TrolleyRequest trolleyRequest)
         {
+            if(trolleyRequest == null)
+            {
+                return BadRequest("Request body is empty or null");
+            }
+
             var result = await _trolleyService.GetTrolleyTotalAsync(trolleyRequest);
 
             return Ok(result);
