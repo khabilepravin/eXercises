@@ -1,17 +1,26 @@
+using eXercise.Diagnostics;
+using eXercise.ServiceImplementations;
+using eXercise.ServiceInterfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using ServiceImplementations;
 
 namespace eXercise
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                    .SetBasePath(env.ContentRootPath)
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                    .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -19,9 +28,19 @@ namespace eXercise
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ExternalServiceSettings>(Configuration.GetSection("ExternalServiceSettings"));
+
+            
+            services.AddSingleton<IConfiguration>(Configuration);
+
             services.AddControllers();
 
             services.AddSwaggerGen();
+
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IShopperHistoryService, ShopperHistoryService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITrolleyService, TrolleyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +59,7 @@ namespace eXercise
             }
 
             app.UseHttpsRedirection();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseRouting();
 
