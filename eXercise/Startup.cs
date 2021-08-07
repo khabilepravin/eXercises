@@ -12,15 +12,19 @@ namespace eXercise
 {
     public class Startup
     {
-        public Startup(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                    .SetBasePath(env.ContentRootPath)
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                    .AddEnvironmentVariables();
+        //public Startup(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
+        //{
+        //    var builder = new ConfigurationBuilder()
+        //            .SetBasePath(env.ContentRootPath)
+        //            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        //            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+        //            .AddEnvironmentVariables();
 
-            Configuration = builder.Build();
+        //    Configuration = builder.Build();
+        //}
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
         }
 
 
