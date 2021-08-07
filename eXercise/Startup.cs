@@ -12,21 +12,17 @@ namespace eXercise
 {
     public class Startup
     {
-        //public Startup(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
-        //{
-        //    var builder = new ConfigurationBuilder()
-        //            .SetBasePath(env.ContentRootPath)
-        //            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        //            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-        //            .AddEnvironmentVariables();
-
-        //    Configuration = builder.Build();
-        //}
-
-        public Startup(IConfiguration configuration)
+        public Startup(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                    .SetBasePath(env.ContentRootPath)
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                    .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
+
 
         public IConfiguration Configuration { get; }
 
@@ -53,11 +49,6 @@ namespace eXercise
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSwagger();
-            
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHealthChecks("/health");
-            });
 
             app.UseSwaggerUI(c =>
             {
@@ -77,6 +68,11 @@ namespace eXercise
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
