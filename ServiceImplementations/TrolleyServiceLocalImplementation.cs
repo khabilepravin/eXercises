@@ -22,26 +22,27 @@ namespace ServiceImplementations
 
                 foreach (var item in trolleyRequest.quantities)
                 {
-                    var itemOriginalPrice = (from p in trolleyRequest.products
-                                     where string.Compare(p.name, item.name, ignoreCase: true) == 0
-                                     select p.price).FirstOrDefault<decimal>();
+                    //var itemOriginalPrice = (from p in trolleyRequest.products
+                    //                 where string.Compare(p.name, item.name, ignoreCase: true) == 0
+                    //                 select p.price).FirstOrDefault<decimal>();
 
                     var matchingSpecial = FetchMatchingSpecial(trolleyRequest.specials, item.name, item.quantity);
 
-                    if(matchingSpecial != null)
-                    {
-                        var discountCalculated = (itemOriginalPrice / 100) * matchingSpecial.total;
-                        var priceAfterDiscount = (itemOriginalPrice - discountCalculated);
-                        total += priceAfterDiscount * item.quantity;
-                    }
-                    else
-                    {
-                        total += itemOriginalPrice * item.quantity;
-                    }
+
+                    //if(matchingSpecial != null)
+                    //{
+                    //    var discountCalculated = (itemOriginalPrice / 100) * matchingSpecial.total;
+                    //    var priceAfterDiscount = (itemOriginalPrice - discountCalculated);
+                    //    total += priceAfterDiscount * item.quantity;
+                    //}
+                    //else
+                    //{
+                    //    total += itemOriginalPrice * item.quantity;
+                    //}
 
                 }
 
-                return Math.Round(total, MidpointRounding.ToZero);
+                return total;
             }
             else
             {
@@ -52,16 +53,16 @@ namespace ServiceImplementations
 
         private Specials FetchMatchingSpecial(IEnumerable<Specials> specialsData, string productName, int productQuantity)
         {
-            //var orderedSpecials = specialsData.OrderByDescending(s => s.total);
+            var orderedSpecials = specialsData.OrderByDescending(s => s.total);
             
-            foreach(var special in specialsData)
+            foreach(var special in orderedSpecials)
             {
-                var resultSpecials = (from q in special.quantities
-                         where q.name == productName && q.quantity == productQuantity
-                         select q).AsEnumerable<Special>();
+                var resultSpecial = (from q in special.quantities
+                         where q.name == productName && q.quantity >= productQuantity
+                         select q).FirstOrDefault<Special>();
 
                 
-                if(resultSpecials != null)
+                if(resultSpecial != null)
                 {
                     return special;
                 }

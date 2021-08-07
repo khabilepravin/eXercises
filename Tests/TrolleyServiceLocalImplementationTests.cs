@@ -9,7 +9,7 @@ namespace Tests
 {
     public class TrolleyServiceLocalImplementationTests
     {
-        [Fact]
+        //[Fact]
         public async Task GetTrolleyTotalAsync_WithSpecialsRequest_CalculatesTheDisountProperty()
         {
             //   var input = "{'products':[{ 'name':'1','price':2.0,'quantity':0.0},{ 'name':'2','price':5.0,'quantity':0.0}],'specials':[{ 'quantities':[{ 'name':'1','quantity':3},{ 'name':'2','quantity':0}],'total':5.0},{ 'quantities':[{ 'name':'1','quantity':1},{ 'name':'2','quantity':2}],'total':10.0}],'quantities':[{ 'name':'1','quantity':3},{ 'name':'2','quantity':2}]}"; //14

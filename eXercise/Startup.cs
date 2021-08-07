@@ -41,6 +41,7 @@ namespace eXercise
             services.AddScoped<IShopperHistoryService, ShopperHistoryService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITrolleyService, TrolleyService>();
+            //services.AddScoped<ITrolleyService, TrolleyServiceLocalImplementation>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
