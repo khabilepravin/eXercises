@@ -7,26 +7,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceImplementations;
+using ServiceImplementations.Repositories;
 
 namespace eXercise
 {
     public class Startup
-    {
-        //public Startup(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
-        //{
-        //    var builder = new ConfigurationBuilder()
-        //            .SetBasePath(env.ContentRootPath)
-        //            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        //            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-        //            .AddEnvironmentVariables();
-
-        //    Configuration = builder.Build();
-        //}
+    {  
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
 
         public IConfiguration Configuration { get; }
 
@@ -46,7 +36,7 @@ namespace eXercise
             services.AddScoped<IShopperHistoryService, ShopperHistoryService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITrolleyService, TrolleyService>();
-            //services.AddScoped<ITrolleyService, TrolleyServiceLocalImplementation>();
+            services.AddScoped<IProductRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

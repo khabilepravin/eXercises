@@ -6,6 +6,6 @@ namespace eXercise.ServiceInterfaces
 {
     public interface IShopperHistoryService
     {
-        Task<IEnumerable<ShopperHistory>> GetShopperHistoryAsync(string token);
+        Task<IEnumerable<ShopperHistory>> GetShopperHistoryAsync();
     }
 }

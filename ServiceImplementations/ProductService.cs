@@ -1,9 +1,6 @@
 ﻿using eXercise.Entities;
 using eXercise.ServiceInterfaces;
-using Flurl.Http;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using ServiceImplementations;
+using ServiceImplementations.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,36 +9,22 @@ namespace eXercise.ServiceImplementations
 {
     public class ProductService : IProductService
     {
-        private readonly string _apiBaseUrl;
-        private readonly string _token;
         private readonly IShopperHistoryService _shopperHistoryService;
-        public ProductService(IOptions<ExternalServiceSettings> options, IShopperHistoryService shopperHistoryService)
+        private readonly IProductRepository _productRepository;
+        public ProductService(IProductRepository productRepository,  IShopperHistoryService shopperHistoryService)
         {
-            _apiBaseUrl = options.Value.ExternalServiceBaseUrl;
-            _token = options.Value.Token;
+            _productRepository = productRepository;
             _shopperHistoryService = shopperHistoryService;
         }
 
         public async Task<IEnumerable<Product>> GetSortedProductsAsync(string sortOption)
         {
-
-            var requestUrl = $"{_apiBaseUrl}/resource/products?token={_token}";
-
-            var result = await requestUrl.GetStringAsync();
-
-            if (string.IsNullOrWhiteSpace(result))
-            {
-                throw new System.Exception("External api failed to return list of products");
-            }
-            else
-            {
-               var products = JsonConvert.DeserializeObject<List<ProductPopularity>>(result);
-
-                return await GetSortedProducts(products, sortOption);
-            }
+            var products = await _productRepository.GetAllProductsAsync();
+            
+            return await GetSortedProducts(products, sortOption);
         }
 
-        private async Task<IEnumerable<Product>> GetSortedProducts(List<ProductPopularity> products, string sortOption)
+        private async Task<IEnumerable<Product>> GetSortedProducts(IEnumerable<ProductPopularity> products, string sortOption)
         {
             switch (sortOption.ToLower())
             {
@@ -61,7 +44,7 @@ namespace eXercise.ServiceImplementations
 
         private async Task<IEnumerable<Product>> SortByPopularity(IEnumerable<ProductPopularity> products)
         {
-            var shoppersHistory = await _shopperHistoryService.GetShopperHistoryAsync(_token); 
+            var shoppersHistory = await _shopperHistoryService.GetShopperHistoryAsync(); 
 
             foreach (var shopHistory in shoppersHistory)
             {

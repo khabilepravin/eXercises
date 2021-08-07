@@ -20,7 +20,7 @@ namespace eXercise.ServiceImplementations
             _token = options.Value.Token;
         }
 
-        public async Task<IEnumerable<ShopperHistory>> GetShopperHistoryAsync(string token)
+        public async Task<IEnumerable<ShopperHistory>> GetShopperHistoryAsync()
         {
             var shopperHistoryRequestUrl = $"{_apiBaseUrl}/resource/shopperHistory?token={_token}";
             var shopperHistoryJsonString = await shopperHistoryRequestUrl.GetStringAsync();

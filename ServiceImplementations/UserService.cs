@@ -1,15 +1,22 @@
 ﻿using eXercise.Entities;
 using System.Threading.Tasks;
 using eXercise.ServiceInterfaces;
+using ServiceImplementations;
+using Microsoft.Extensions.Options;
 
 namespace eXercise.ServiceImplementations
 {
     public class UserService : IUserService
     {
-        public async Task<User> GetUserAsync()
+        private readonly ExternalServiceSettings _externalServiceSettings;
+        public UserService(IOptions<ExternalServiceSettings> options)
         {
+            _externalServiceSettings = options.Value;
+        }
+        public async Task<User> GetUserAsync()
+        {   
             await Task.CompletedTask;
-            return new User() { Token = "861feec1-23fc-44c1-870c-adf66caa4d9a", Name = "Pravin Khabile" };
+            return new User() { Token = _externalServiceSettings.Token, Name = _externalServiceSettings.UserName };
         }
     }
 }
