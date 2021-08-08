@@ -18,7 +18,7 @@ namespace ServiceImplementations.Repositories
             _token = options.Value.Token;
         }
 
-        public async Task<IEnumerable<ProductPopularity>> GetAllProductsAsync()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             var requestUrl = $"{_apiBaseUrl}/resource/products?token={_token}";
 
@@ -30,7 +30,7 @@ namespace ServiceImplementations.Repositories
             }
             else
             {
-                return JsonConvert.DeserializeObject<List<ProductPopularity>>(result);
+                return JsonConvert.DeserializeObject<List<Product>>(result);
             }
         }
     }

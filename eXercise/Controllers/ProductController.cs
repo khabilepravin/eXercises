@@ -22,7 +22,7 @@ namespace eXercise.Controllers
 
 
         [HttpGet("sort")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetSortedProducts([FromQuery]string sortOption)
+        public async Task<ActionResult<IEnumerable<ProductBase>>> GetSortedProducts([FromQuery]string sortOption)
         {
             if (IsValidSortOption(sortOption) == false)
             {

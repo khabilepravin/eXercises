@@ -1,9 +1,10 @@
-﻿namespace eXercise.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace eXercise.Entities
 {
-    public class Product
+    public class Product : ProductBase
     {
-        public string name { get; set; }
-        public decimal price { get; set; }
-        public decimal quantity { get; set; }   
+        [JsonIgnore]
+        public decimal PopularityIndex { get; set; }
     }
 }

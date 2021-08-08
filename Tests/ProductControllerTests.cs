@@ -68,9 +68,9 @@ namespace Tests
         {
             return new Product
             {
-                name = Guid.NewGuid().ToString(),
-                quantity = random.Next(maxValue: 10),
-                price = random.Next(maxValue: 100)
+                Name = Guid.NewGuid().ToString(),
+                Quantity = random.Next(maxValue: 10),
+                Price = random.Next(maxValue: 100)
             };
         } 
 

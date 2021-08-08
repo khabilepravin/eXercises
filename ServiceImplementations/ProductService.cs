@@ -24,25 +24,25 @@ namespace eXercise.ServiceImplementations
             return await GetSortedProducts(products, sortOption);
         }
 
-        private async Task<IEnumerable<Product>> GetSortedProducts(IEnumerable<ProductPopularity> products, string sortOption)
+        private async Task<IEnumerable<Product>> GetSortedProducts(IEnumerable<Product> products, string sortOption)
         {
             switch (sortOption.ToLower())
             {
                 default:
                 case "low":
-                    return products.OrderBy(p => p.price);
+                    return products.OrderBy(p => p.Price);
                 case "high":                        
-                    return products.OrderByDescending(p => p.price);
+                    return products.OrderByDescending(p => p.Price);
                 case "ascending":
-                    return products.OrderBy(p => p.name);
+                    return products.OrderBy(p => p.Name);
                 case "descending":
-                    return products.OrderByDescending(p => p.name);                    
+                    return products.OrderByDescending(p => p.Name);                    
                 case "recommended":
                     return await SortByPopularity(products);                                    
             }
         }
 
-        private async Task<IEnumerable<Product>> SortByPopularity(IEnumerable<ProductPopularity> products)
+        private async Task<IEnumerable<Product>> SortByPopularity(IEnumerable<Product> products)
         {
             var shoppersHistory = await _shopperHistoryService.GetShopperHistoryAsync(); 
 
@@ -50,12 +50,12 @@ namespace eXercise.ServiceImplementations
             {
                 foreach (var product in products) {
                     var boughtThisProduct = (from p in shopHistory.Products
-                    where string.Compare(p.name, product.name, ignoreCase: true) == 0
-                    select p).FirstOrDefault<Product>();
+                    where string.Compare(p.Name, product.Name, ignoreCase: true) == 0
+                    select p).FirstOrDefault<ProductBase>();
 
                     if(boughtThisProduct != null)
                     {
-                        product.PopularityIndex += boughtThisProduct.quantity;
+                        product.PopularityIndex += boughtThisProduct.Quantity;
                     }
                 }
             }

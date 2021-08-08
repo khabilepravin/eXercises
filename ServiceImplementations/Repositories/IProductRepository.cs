@@ -6,6 +6,6 @@ namespace ServiceImplementations.Repositories
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<ProductPopularity>> GetAllProductsAsync();
+        Task<IEnumerable<Product>> GetAllProductsAsync();
     }
 }
