@@ -1,3 +1,4 @@
+using AutoFixture.Xunit2;
 using eXercise.Controllers;
 using eXercise.Entities;
 using eXercise.ServiceInterfaces;
@@ -23,11 +24,11 @@ namespace Tests
             randomNumberGenerator = new Random();
         }
         
-        [Fact]
-        public async Task GetUser_WithNoPrams_ReturnsUserRecord()
+        [Theory]
+        [AutoData]
+        public async Task GetUser_WithNoPrams_ReturnsUserRecord(User expectedItem)
         {
             // Arrange
-            var expectedItem = CreateRandomUser();
             userRepositoryStub.Setup(repo => repo.GetUserAsync()).ReturnsAsync(expectedItem);
             
             var exceriseController = new UserController(loggerStub.Object,                                                             
@@ -39,14 +40,5 @@ namespace Tests
             // Assert
             response.Value.Should().BeEquivalentTo(expectedItem);
         }    
-
-        private User CreateRandomUser()
-        {
-            return new User
-            {
-                Name = Guid.NewGuid().ToString(),
-                Token = Guid.NewGuid().ToString()
-            };
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using eXercise.Controllers;
+﻿using AutoFixture.Xunit2;
+using eXercise.Controllers;
 using eXercise.Entities;
 using eXercise.ServiceInterfaces;
 using FluentAssertions;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -26,12 +28,11 @@ namespace Tests
             sortOptions = new string[] { "Low", "High", "Ascending", "Descending", "Recommended" };
         }
 
-        [Fact]
-        public async Task GetSortedProducts_WithValidSortOption_ReturnsSortedProducts()
+        [Theory]
+        [AutoData]
+        public async Task GetSortedProducts_WithValidSortOption_ReturnsSortedProducts(IEnumerable<Product> expectedItems)
         {
             // Arrange
-            var expectedItems = new[] { CreateRandomItem(), CreateRandomItem(), CreateRandomItem() };
-
             productServiceStub.Setup(repo => repo.GetSortedProductsAsync(It.IsAny<string>()))
                 .ReturnsAsync(expectedItems);
 
@@ -46,12 +47,11 @@ namespace Tests
             result.Value.Should().BeEquivalentTo(expectedItems);
         }
 
-        [Fact]
-        public async Task GetSortedProducts_WithInvalidSortOption_ReturnsBadRequest()
+        [Theory]
+        [AutoData]
+        public async Task GetSortedProducts_WithInvalidSortOption_ReturnsBadRequest(IEnumerable<Product> expectedItems)
         {
             // Arrange
-            var expectedItems = new[] { CreateRandomItem(), CreateRandomItem(), CreateRandomItem() };
-
             productServiceStub.Setup(repo => repo.GetSortedProductsAsync(It.IsAny<string>()))
                 .ReturnsAsync(expectedItems);
             
@@ -63,17 +63,7 @@ namespace Tests
             // Assert
             response.Result.Should().BeOfType<BadRequestObjectResult>();
         }
-
-        private Product CreateRandomItem()
-        {
-            return new Product
-            {
-                Name = Guid.NewGuid().ToString(),
-                Quantity = random.Next(maxValue: 10),
-                Price = random.Next(maxValue: 100)
-            };
-        } 
-
+               
         private string GetRandomSortOption()
         {
             return sortOptions[random.Next(maxValue: 4)];
