@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eXercise.Diagnostics
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware : IMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
@@ -17,7 +17,7 @@ namespace eXercise.Diagnostics
             _logger = loggerFactory.CreateLogger<ExceptionMiddleware>(); 
         }
     
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext, RequestDelegate requestDelegate)
         {
             try
             {

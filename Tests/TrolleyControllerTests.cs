@@ -1,4 +1,5 @@
-﻿using eXercise.Controllers;
+﻿using AutoFixture.Xunit2;
+using eXercise.Controllers;
 using eXercise.Entities;
 using eXercise.ServiceInterfaces;
 using FluentAssertions;
@@ -13,17 +14,11 @@ namespace Tests
 {
     public class TrolleyControllerTests
     {
-        private readonly Mock<ITrolleyService> trolleyServiceStub;
-        private readonly Mock<ILogger<TrolleyController>> loggerStub;
-        
-        public TrolleyControllerTests()
-        {
-            trolleyServiceStub = new Mock<ITrolleyService>();
-            loggerStub = new Mock<ILogger<TrolleyController>>();
-        }
-
-        [Fact]
-        public async Task GetTrolleyTotalAsync_WithValidTrolleyRequest_ReturnsAPositiveNumber()
+        [Theory]
+        [AutoDomainData]
+        public async Task GetTrolleyTotalAsync_WithValidTrolleyRequest_ReturnsAPositiveNumber([Frozen]Mock<ITrolleyService> trolleyServiceStub,
+            Mock<ILogger<TrolleyController>> loggerStub,
+            [Greedy]TrolleyController trolleyController)
         {
             // arrange
             var trolleyRequest = JsonConvert.DeserializeObject<TrolleyRequest>("{'products':[{'name':'1','price':2,'quantity':0},{'name':'2','price':5,'quantity':0}],'specials':[{'quantities':[{'name':'1','quantity':3},{'name':'2','quantity':0}],'total':5},{'quantities':[{'name':'1','quantity':1},{'name':'2','quantity':2}],'total':10}],'quantities':[{'name':'1','quantity':3},{'name':'2','quantity':2}]}");
@@ -32,8 +27,6 @@ namespace Tests
 
             trolleyServiceStub.Setup(service => service.GetTrolleyTotalAsync(It.IsAny<TrolleyRequest>()))
                 .ReturnsAsync(expectedValue);
-
-            var trolleyController = new TrolleyController(loggerStub.Object, trolleyServiceStub.Object);
 
             // act
             var response = await trolleyController.GetTrolleyTotalAsync(trolleyRequest);
@@ -44,14 +37,15 @@ namespace Tests
             result.Value.Should().BeEquivalentTo(expectedValue);
         }
 
-        [Fact]
-        public async Task GetTrolleyTotalAsync_WithInvalidTrolleyRequest_ReturnsBadRequest()
+        [Theory]
+        [AutoDomainData]
+        public async Task GetTrolleyTotalAsync_WithInvalidTrolleyRequest_ReturnsBadRequest([Frozen] Mock<ITrolleyService> trolleyServiceStub,
+            Mock<ILogger<TrolleyController>> loggerStub,
+            [Greedy] TrolleyController trolleyController)
         {
             // arrange            
             trolleyServiceStub.Setup(service => service.GetTrolleyTotalAsync(It.IsAny<TrolleyRequest>()))
                 .ReturnsAsync(0);
-
-            var trolleyController = new TrolleyController(loggerStub.Object, trolleyServiceStub.Object);
 
             // act
             var response = await trolleyController.GetTrolleyTotalAsync(null);

@@ -33,11 +33,11 @@ namespace eXercise
             services.AddSwaggerGen();
 
             // Singleton could be an enhancement
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IShopperHistoryService, ShopperHistoryService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ITrolleyService, TrolleyService>();
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddSingleton<IProductService, ProductService>();
+            services.AddSingleton<IShopperHistoryService, ShopperHistoryService>();
+            services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<ITrolleyService, TrolleyService>();
+            services.AddSingleton<IProductRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
