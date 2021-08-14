@@ -1,4 +1,5 @@
-﻿using AutoFixture.Xunit2;
+﻿using AutoFixture;
+using AutoFixture.Xunit2;
 using eXercise.Entities;
 using eXercise.ServiceImplementations;
 using eXercise.ServiceInterfaces;
@@ -8,6 +9,8 @@ using ServiceImplementations.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using System.Linq;
+using System;
 
 namespace Tests
 {
@@ -15,7 +18,8 @@ namespace Tests
     {
         private readonly Mock<IProductRepository> productRepositoryStub;
         private readonly Mock<IShopperHistoryService> shopperHistoryServiceStub;
-
+        private readonly Random randomNumberGenerator = new Random();
+ 
         public ProductServiceTests()
         {
             productRepositoryStub = new Mock<IProductRepository>();
@@ -23,7 +27,7 @@ namespace Tests
         }
 
         [Theory]
-        [AutoData]
+        [AutoDomainData]
         public async Task GetSortedProductsAsync_WithLowSortOption_OrdersProductsByPriceAsc(List<Product> expectedItems, List<ShopperHistory> shopperHistoryItems)
         {
             // Arrange
@@ -43,15 +47,23 @@ namespace Tests
         }
 
         [Theory]
-        [AutoData]
-        public async Task GetSortedProductsAsync_WithRecommendedOption_OrdersProductsByPopularity(List<Product> expectedItems, List<ShopperHistory> shopperHistoryItems)
+        [AutoDomainData]
+        public async Task GetSortedProductsAsync_WithRecommendedOption_OrdersProductsByPopularity([CollectionSize(12)]List<Product> expectedItems)
         {
             // Arrange
             productRepositoryStub.Setup(repo => repo.GetAllProductsAsync())
                 .ReturnsAsync(expectedItems);
 
+            Fixture fixtureForShopperHistoryData = new Fixture();
+            var shopperHistoryList = fixtureForShopperHistoryData.CreateMany<ShopperHistory>(10);
+
+            foreach(var shopperHistory in shopperHistoryList)
+            {
+                shopperHistory.Products = expectedItems.Take(randomNumberGenerator.Next(12));
+            }
+
             shopperHistoryServiceStub.Setup(repo => repo.GetShopperHistoryAsync())
-                .ReturnsAsync(shopperHistoryItems);
+                .ReturnsAsync(shopperHistoryList);
 
             var productService = new ProductService(productRepositoryStub.Object, shopperHistoryServiceStub.Object);
 

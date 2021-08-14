@@ -22,6 +22,7 @@ namespace ServiceImplementations.Repositories
         {
             var requestUrl = $"{_apiBaseUrl}/resource/products?token={_token}";
 
+            // This can be enhanced using some polly logic to retry
             var result = await requestUrl.GetStringAsync();
 
             if (string.IsNullOrWhiteSpace(result))

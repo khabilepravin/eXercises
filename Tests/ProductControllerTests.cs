@@ -1,5 +1,4 @@
-﻿using AutoFixture.Xunit2;
-using eXercise.Controllers;
+﻿using eXercise.Controllers;
 using eXercise.Entities;
 using eXercise.ServiceInterfaces;
 using FluentAssertions;
@@ -29,7 +28,7 @@ namespace Tests
         }
 
         [Theory]
-        [AutoData]
+        [AutoDomainData]
         public async Task GetSortedProducts_WithValidSortOption_ReturnsSortedProducts(IEnumerable<Product> expectedItems)
         {
             // Arrange
@@ -48,7 +47,7 @@ namespace Tests
         }
 
         [Theory]
-        [AutoData]
+        [AutoDomainData]
         public async Task GetSortedProducts_WithInvalidSortOption_ReturnsBadRequest(IEnumerable<Product> expectedItems)
         {
             // Arrange

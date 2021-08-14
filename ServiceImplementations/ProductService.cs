@@ -1,6 +1,7 @@
 ﻿using eXercise.Entities;
 using eXercise.ServiceInterfaces;
 using ServiceImplementations.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,23 +45,37 @@ namespace eXercise.ServiceImplementations
 
         private async Task<IEnumerable<Product>> SortByPopularity(IEnumerable<Product> products)
         {
-            var shoppersHistory = await _shopperHistoryService.GetShopperHistoryAsync(); 
+            var shoppersHistory = await _shopperHistoryService.GetShopperHistoryAsync();
+
+            Dictionary<string, int> productsPopularityDictionary = new Dictionary<string, int>();
 
             foreach (var shopHistory in shoppersHistory)
             {
-                foreach (var product in products) {
-                    var boughtThisProduct = (from p in shopHistory.Products
-                    where string.Compare(p.Name, product.Name, ignoreCase: true) == 0
-                    select p).FirstOrDefault<ProductBase>();
-
-                    if(boughtThisProduct != null)
+                foreach(var product in shopHistory.Products)
+                {
+                    if (productsPopularityDictionary.ContainsKey(product.Name))
                     {
-                        product.PopularityIndex += boughtThisProduct.Quantity;
+                        productsPopularityDictionary[product.Name] = productsPopularityDictionary[product.Name] + Convert.ToInt32(product.Quantity);
+                    }
+                    else
+                    {
+                        productsPopularityDictionary.Add(product.Name, Convert.ToInt32(product.Quantity));
                     }
                 }
             }
-          
+
+            foreach (var product in products)
+            {
+                if (productsPopularityDictionary.ContainsKey(product.Name))
+                {
+                    product.PopularityIndex += productsPopularityDictionary[product.Name];
+                }
+            }
+
+
             return products.OrderByDescending(p => p.PopularityIndex);
         }
     }
+
+
 }

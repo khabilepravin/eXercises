@@ -32,6 +32,7 @@ namespace eXercise
 
             services.AddSwaggerGen();
 
+            // Singleton could be an enhancement
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IShopperHistoryService, ShopperHistoryService>();
             services.AddScoped<IUserService, UserService>();

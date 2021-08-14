@@ -25,7 +25,7 @@ namespace Tests
         }
         
         [Theory]
-        [AutoData]
+        [AutoDomainData]
         public async Task GetUser_WithNoPrams_ReturnsUserRecord(User expectedItem)
         {
             // Arrange
